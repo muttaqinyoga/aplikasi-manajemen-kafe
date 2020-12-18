@@ -3,11 +3,8 @@ Aplikasi sederhana berbasis web yang digunakan untuk memanajemen kafe. Aplikasi 
 # Fitur Aplikasi
 - Login Multiuser
     Ada dua jenis user yang ada pada aplikasi yaitu admin/owner dan waiter.
-# Master Admin/Owner
-    - Manage Data User
-    - Manage Menu (Makanan & Minuman)
-    - Manage Meja (nomor)
-    - Manage Pesanan (Order)
-    - Manage Pembayaran
-# Master Waiter
-    - Manage Pesanan (Order)
+- Manage Data User (oleh Admin/Owner)
+- Manage Menu Makanan & Minuman (oleh Admin/Owner)
+- Manage Meja (oleh Admin/Owner)
+- Manage Pesanan/Order (oleh Admin/Owner dan Waiter)
+- Manage Pembayaran (oleh Admin/Owner)
