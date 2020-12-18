@@ -1,4 +1,4 @@
-# cafe-management-app
+# Aplikasi Manajemen Kafe
 Aplikasi sederhana berbasis web yang digunakan untuk memanajemen kafe. Aplikasi ini dibuat menggunakan framework laravel versi 5.6.
 # Fitur Aplikasi
 - Login Multiuser
