@@ -50,7 +50,17 @@
                                 </div>
                             </div>
                         </div>
-
+                        <div class="form-group row">
+                            <div class="col-md-6 offset-md-4">
+                                <p>{!!captcha_img('flat')!!}</p>
+                                <input type="text" name="captcha" class="form-control {{ $errors->has('captcha') ? ' is-invalid' : '' }}" placeholder="ketikkan kode pada gambar diatas...">
+                                @if ($errors->has('captcha'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>Invalid code entered</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
                         <div class="form-group row mb-0">
                             <div class="col-md-8 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
