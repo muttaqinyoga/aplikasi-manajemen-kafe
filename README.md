@@ -8,3 +8,5 @@ Aplikasi sederhana berbasis web yang digunakan untuk memanajemen kafe. Aplikasi 
 - Manage Meja (oleh Admin/Owner)
 - Manage Pesanan/Order (oleh Admin/Owner dan Waiter)
 - Manage Pembayaran (oleh Admin/Owner)
+# Update untuk menambahkan Captcha saat akan login
+- Setelah menjalankan perintah composer install, buka file AuthenticatesUsers.php pada folder vendor/laravel/framework/src/Illuminate/Foundation/Auth/ lalu pada method validateLogin tambahkan rules validasi captcha dengan nilai required|captcha
