@@ -53,7 +53,7 @@
                         <div class="form-group row">
                             <div class="col-md-6 offset-md-4">
                                 <p>{!!captcha_img('flat')!!}</p>
-                                <input type="text" name="captcha" class="form-control {{ $errors->has('captcha') ? ' is-invalid' : '' }}" placeholder="ketikkan kode pada gambar diatas...">
+                                <input type="text" name="captcha" autocomplete="off" class="form-control {{ $errors->has('captcha') ? ' is-invalid' : '' }}" placeholder="ketikkan kode pada gambar diatas...">
                                 @if ($errors->has('captcha'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>Invalid code entered</strong>
