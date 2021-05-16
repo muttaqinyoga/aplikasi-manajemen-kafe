@@ -15,7 +15,14 @@
 
                 <div class="card-body">
                     <div id="message" style="width: 50% !important;">
-                        
+                        @if($message=Session::get('message'))
+                        <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                                {{$message}}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>                                     
+                        </div>
+                         @endif
                     </div>
                     <button type="button" class="btn btn-info mb-3 text-white" data-toggle="modal" data-target="#addOrderModal">Buat Pesanan Baru</button>
                     <div class="table-responsive">
@@ -170,7 +177,7 @@
                     type: 'DELETE',
                     dataType: 'json',
                     headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                    data: {orderID:$('#orderID').val(),"_token": "{{ csrf_token() }}"},
+                    data: {"orderID":$('#orderID').val(),"_token": "{{ csrf_token() }}"},
                     success: function (result) {
                         window.setTimeout(function(){
                             $('#cancelOrderModal').modal('hide');
@@ -184,7 +191,7 @@
                             loadOrder();
                         }, 500);
                     },
-                    error: function(){
+                    error: function(e){
                         document.location.href = `{{url('/pesanan')}}`;
                     }
                 })
@@ -222,6 +229,7 @@
                         $('.invalid-feedback').remove();
                         $('.is-invalid').removeClass('is-invalid');
                         $('#saveOrderBtn').removeClass('text-dark');
+                        $('#saveOrderBtn').html(`Simpan`);
                         $('#saveOrderBtn').attr('disabled', false);
                         if(err.status == 422){
                             $.each(err.responseJSON.errors, function (i, error) {
