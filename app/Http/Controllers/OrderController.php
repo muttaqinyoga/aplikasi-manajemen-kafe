@@ -160,7 +160,7 @@ class OrderController extends Controller
    				}
 
    			}
-   			$menuOrdered = Menu::where('uid', '=', $request['menu_id'])->firstOrFail();
+   		$menuOrdered = Menu::where('uid', '=', $request['menu_id'])->firstOrFail();
 			$menuPriceOrdered = $menuOrdered->menu_price;
 			$menuQuantityOrdered = $request['quantity_ordered'];
 			$totalPrice += (int) $menuPriceOrdered * (int) $menuQuantityOrdered;
@@ -219,11 +219,19 @@ class OrderController extends Controller
    }
    public function delete(Request $request)
    {
-      $order = Order::where('uid', '=', $request->orderID, 'and')->where('status', '=', 'Belum dibayar', 'and')->where('created_by', '=', Auth::user()->uid)->firstOrFail();
+      if(Auth::user()->role==62)
+      {
+         $order = Order::where('uid', '=', $request->orderID, 'and')->where('status', '=', 'Belum dibayar')->firstOrFail();
+      }
+      else
+      {
+         $order = Order::where('uid', '=', $request->orderID, 'and')->where('status', '=', 'Belum dibayar', 'and')->where('created_by', '=', Auth::user()->uid)->firstOrFail();
+      }
+      $order->delete();
       $table = Table::findOrFail($order->table_number);
-      $order->status='Dibatalkan';
-      $order->update();
       $table->status = 'Kosong';
+      $table->update();
+
       return response()->json(['success' => '<div class="alert alert-info alert-dismissible fade show" role="alert">
                                     Pesanan dengan nomor : <strong>'.$order->invoice_number.'</strong> berhasil dibatalkan
                                       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -295,7 +303,14 @@ class OrderController extends Controller
          'quantity_new_menu.min' => 'Jumlah menu tidak valid',
          'quantity_new_menu.max' => 'Jumlah menu tidak valid'
        ])->validate();
-      $order = Order::where('uid', '=', $id, 'and')->where('status', '=', 'Belum dibayar', 'and')->where('created_by', '=', Auth::user()->uid)->firstOrFail();
+      if(Auth::user()->role == 62)
+      {
+         $order = Order::where('uid', '=', $id, 'and')->where('status', '=', 'Belum dibayar')->firstOrFail();
+      }
+      else
+      {
+         $order = Order::where('uid', '=', $id, 'and')->where('status', '=', 'Belum dibayar', 'and')->where('created_by', '=', Auth::user()->uid)->firstOrFail();
+      }
       $newMenu = Menu::findOrFail($request->add_new_menu);
       $newTotalPrice = (int) $newMenu->menu_price * (int) $request->quantity_new_menu;
       $currTotalPrice = $order->total_price;
@@ -314,6 +329,14 @@ class OrderController extends Controller
                'edit_menu_ordered_id' => 'required|exists:menus,uid',
                'edit_quantity_menu_ordered' => 'required|integer|min:1|max:100'
        ])->validate();
+      if(Auth::user()->role == 62)
+      {
+         $order = Order::where('uid', '=', $id, 'and')->where('status', '=', 'Belum dibayar')->firstOrFail();
+      }
+      else
+      {
+         $order = Order::where('uid', '=', $id, 'and')->where('status', '=', 'Belum dibayar', 'and')->where('created_by', '=', Auth::user()->uid)->firstOrFail();
+      }
       $newTotalPrice = 0;
       $orderdetail = OrderDetail::findOrFail($oid);
       $orderdetail->menu_uid = $request->edit_menu_ordered_id;
@@ -328,13 +351,20 @@ class OrderController extends Controller
       {
          $newTotalPrice += (int) $od->menuPrice * (int) $od->quantityOrdered;
       }
-      $order = Order::findOrFail($id);
       $order->total_price = $newTotalPrice;
       $order->update();
       return redirect(url('order/'.$id.'/details'))->with('message', 'Menu pesanan perhasil diupdate');
    }
    public function deleteMenuOrder($id, $oid)
    {
+      if(Auth::user()->role == 62)
+      {
+         $order = Order::where('uid', '=', $id, 'and')->where('status', '=', 'Belum dibayar')->firstOrFail();
+      }
+      else
+      {
+         $order = Order::where('uid', '=', $id, 'and')->where('status', '=', 'Belum dibayar', 'and')->where('created_by', '=', Auth::user()->uid)->firstOrFail();
+      }
       $orderdetail = OrderDetail::findOrFail($oid);
       $orderdetail->delete();
       $newTotalPrice = 0;
@@ -347,9 +377,20 @@ class OrderController extends Controller
       {
          $newTotalPrice += (int) $od->menuPrice * (int) $od->quantityOrdered;
       }
-      $order = Order::findOrFail($id);
-      $order->total_price = $newTotalPrice;
-      $order->update();
-      return redirect(url('order/'.$id.'/details'))->with('message', 'Pesanan berhasil dihapus');
+      // if all menu ordered has been deleted
+      if($newTotalPrice == 0)
+      {
+         $order->delete();
+         $table = Table::findOrFail($order->table_number);
+         $table->status = 'Kosong';
+         $table->update();
+         return redirect(url('/pesanan'))->with('message', 'Pesanan berhasil dihapus');
+      }
+      else
+      {
+         $order->total_price = $newTotalPrice;
+         $order->update();
+         return redirect(url('order/'.$id.'/details'))->with('message', 'Pesanan berhasil dihapus');
+      }
    }
 }
