@@ -49,12 +49,12 @@ Route::group(['middleware' => 'auth'], function(){
 		Route::get('/tables/get', 'OrderController@getTables');
 		Route::get('/data', 'OrderController@getData');
 		Route::post('/save', 'OrderController@save');
-		Route::delete('order/destroy', 'OrderController@delete');
+		Route::delete('/destroy', 'OrderController@delete');
 		Route::get('/{id}/details', 'OrderController@details');
 		Route::put('/table/update', 'OrderController@updateTable');
 		Route::put('/add/{id}', 'OrderController@addNewOrder');
 		Route::put('/update/{id}/{oid}', 'OrderController@updateMenuOrder');
-		Route::delete('/order/destroy/{id}/{oid}', 'OrderController@deleteMenuOrder');
+		Route::delete('/destroy/{id}/{oid}', 'OrderController@deleteMenuOrder');
 	});
 	// End Orders
 	Route::get('/invoice/{id}', 'PaymentController@details');
